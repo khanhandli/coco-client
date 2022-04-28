@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --port 3002",
-    "build": "vite build && copy _redirects dist",
+    "build": "vite build && cp _redirects dist",
     "preview": "vite preview"
   },
   "dependencies": {
