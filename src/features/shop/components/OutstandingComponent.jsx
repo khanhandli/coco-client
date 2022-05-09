@@ -2,8 +2,12 @@ import React from 'react';
 import news from '../../../assets/images/new.png';
 import left_arrow from '../../../assets/images/left_arrow.png';
 import cosmetics from '../../../assets/images/cosmetics.png';
+import { formatNumber } from '../../../utils/common';
+import { useNavigate } from 'react-router-dom';
 
-const OutstandingComponent = () => {
+const OutstandingComponent = ({ products }) => {
+    const navigate = useNavigate();
+
     return (
         <div className="flex">
             <div className="w-[260px] h-min bg-[#e7e7f5] rounded-xl p-[40px]">
@@ -16,25 +20,41 @@ const OutstandingComponent = () => {
                 </div>
             </div>
             <div className="flex-1">
-                <div class="grid grid-cols-4 gap-12 h-full mx-10">
-                    <div className="h-full flex items-center justify-center">
-                        <div className="relative w-4/5 bg-white h-2/3 flex justify-between items-center flex-col rounded-2xl shadow-md border">
-                            <div className="-translate-y-[50%] absolute rounded-2xl">
-                                <img src={cosmetics} alt="cosmetics" />
-                            </div>
-                            <div className="flex-1"></div>
-                            <div className="flex-1 flex flex-col items-center">
-                                <span className="text-[14px] font-bold mb-2">Title</span>
-                                <span className="text-xl font-bold font-mono">$125.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="h-full flex items-center justify-center">
-                        <div className=" w-4/5 bg-white h-2/3 rounded-2xl shadow-md border"></div>
-                    </div>
-                    <div className="h-full flex items-center justify-center">
-                        <div className=" w-4/5 bg-white h-2/3 rounded-2xl shadow-md border"></div>
-                    </div>
+                <div className="grid grid-cols-4 gap-12 h-full mx-10">
+                    {products &&
+                        products.length > 0 &&
+                        products.map(
+                            (product, index) =>
+                                index < 3 && (
+                                    <div
+                                        key={index}
+                                        onClick={() => {
+                                            navigate('/shop/detail/' + product._id);
+                                        }}
+                                        className="transition-all hover:opacity-80 cursor-pointer h-full flex items-center justify-center"
+                                    >
+                                        <div className="relative w-[240px] bg-white h-2/3 flex justify-between items-center flex-col rounded-2xl shadow-md border">
+                                            <div className="-translate-y-[50%] absolute rounded-2xl">
+                                                <img
+                                                    className="hover:scale-125 h-[120px] w-[120px] rounded-full"
+                                                    src={product.image}
+                                                    alt="cosmetics"
+                                                />
+                                            </div>
+                                            <div className="flex-1"></div>
+                                            <div className="flex-1 flex flex-col items-center">
+                                                <div className="text-[14px] font-bold mb-2 truncate w-[240px] px-6 text-left">
+                                                    {product.title}
+                                                </div>
+                                                <span className="text-xl font-bold font-mono">
+                                                    ${formatNumber(product.price)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                        )}
+
                     <div className="h-full flex items-center justify-center">
                         <div className=" w-4/5 bg-[#5b4ebb] hover:bg-[#4739ad] cursor-pointer h-2/3 rounded-2xl shadow-md border">
                             <div className="px-6 p-4">

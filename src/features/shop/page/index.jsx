@@ -11,8 +11,14 @@ import PromotionComponent from '../components/PromotionComponent';
 import banner1 from '../../../assets/images/banner-giua-trang-1.png';
 import banner2 from '../../../assets/images/banner-giua-trang_2.png';
 import banner3 from '../../../assets/images/banner3.png';
+import SlideBlogPreview from '../components/SlideBlogPreview';
+import { useSelector } from 'react-redux';
+
+const listColor = ['bg-[#9666f6]', 'bg-[#ffa90e]', 'bg-[#1ce6ca]'];
 
 const ShopPage = () => {
+    const product = useSelector((state) => state.product.products);
+
     return (
         <AppLayout>
             <div className=" w-full">
@@ -36,16 +42,18 @@ const ShopPage = () => {
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-16 mt-[60px] w-[80%] mb-[90px]">
-                    <HotSaleComponent />
-                    <div>
-                        <div className="h-[360px] rounded-2xl bg-[#ffa90e]">123</div>
-                    </div>
-                    <div>
-                        <div className="h-[360px] rounded-2xl bg-[#1ce6ca]">123</div>
-                    </div>
+                <div className="grid grid-cols-3 gap-16 mt-[60px] w-[80%] mb-[90px]">
+                    {product &&
+                        product.length > 0 &&
+                        product
+                            .slice()
+                            .sort((a, b) => b?.discount - a?.discount)
+                            .map(
+                                (item, index) =>
+                                    index < 3 && <HotSaleComponent bg={listColor[index]} item={item} key={index} />
+                            )}
                 </div>
-                <OutstandingComponent />
+                <OutstandingComponent products={product} />
                 <div className="mt-16">
                     <div className="flex">
                         <div className="flex-1 mr-1">
@@ -57,7 +65,11 @@ const ShopPage = () => {
                     </div>
                     <img src={banner3} alt="banner3" />
                 </div>
-                <PromotionComponent />
+                <PromotionComponent products={product} />
+                <div>
+                    <h2 className="text-center mt-[40px] text-2xl">MẸO LÀM ĐẸP / ĐÁNH GIÁ</h2>
+                    <SlideBlogPreview />
+                </div>
             </div>
         </AppLayout>
     );

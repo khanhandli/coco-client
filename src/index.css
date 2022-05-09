@@ -1,7 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+*{
+  min-height: 0;
+  min-width: 0;
+  }
 body {
   margin: 0;
   max-width: 100vw;
@@ -24,6 +27,11 @@ body {
 
 .bg_4 {
   background-size: cover;
+}
+
+.no_scroll::-webkit-scrollbar
+{
+	width: 0;
 }
 
 .custom_scroll::-webkit-scrollbar-track
@@ -64,3 +72,75 @@ body {
 .rate_custom .ant-rate-star:not(:last-child) {
     margin-right: 4px;
 } 
+
+.slick-slide {
+  /* margin: 0 10px; */
+}
+
+.tree_category  span.ant-tree-title {
+  font-size: 14px !important;
+  text-transform: uppercase;
+}
+
+.tree_category span.ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal,
+.tree_category span.ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-close,
+.tree_category .ant-tree-node-selected ,
+.tree_category .ant-tree-node-content-wrapper-open {
+  min-height: 34px !important;
+  display: flex;
+  align-items: center;
+}
+
+.tree_category .ant-tree-switcher-leaf-line::after {
+  height: 17px;
+}
+
+.tree_category .ant-tree-node-selected {
+  padding: 0 14px !important;
+  border-radius: 8px !important;
+}
+
+.tree_category .ant-tree-node-content-wrapper-open {
+  margin-top: 3px;
+}
+
+.form_item {
+  margin-bottom: 12px !important;
+}
+
+.site-form-item-icon {
+  padding: 0 4px 0 0 !important;
+}
+
+.input_auth {
+  padding: 8px 14px !important;
+}
+.login-form-button {
+  border-radius: 999px !important;
+  width: 100% !important;
+}
+
+.input-radius {
+  border-radius: 999px !important;
+}
+
+.ant-list-item {
+  padding: 0 !important;
+}
+
+.ant-list-item:not(:first-child) {
+  margin-top: 20px;
+}
+
+.custom_desc *,
+.custom_desc * div > div > .g-mb-30
+ { 
+  font-size: 13px !important;
+  font-weight: normal !important;
+  color: #cdcaca;
+  margin-bottom: 0 !important;
+}
+
+.custom_desc_detail * {
+  font-size: 14px !important;
+}

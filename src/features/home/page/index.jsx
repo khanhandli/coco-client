@@ -3,6 +3,7 @@ import { getDataAPI } from '../../../apis/fetchData';
 import _ from 'lodash';
 import { Spin } from 'antd';
 import { Link } from 'react-router-dom';
+import HomeHeader from '../../../components/layouts/HomeHeader';
 
 const HomePage = () => {
     const [detailBanners, setDetailBanners] = React.useState({});
@@ -24,44 +25,7 @@ const HomePage = () => {
         <div className="px-[60px] py-[30px] flex flex-col h-screen">
             {!_.isEmpty(detailBanners) && detailBanners?.data?.banner_1 ? (
                 <>
-                    <div className="flex justify-between">
-                        <div className="w-[220px] relative pl-11 font-bold text-xl">
-                            <div className="flex justify-end items-center absolute h-[40px] w-[40px] top-[50%] -translate-y-1/2 left-0 bg-[#f4de4d] rounded-full">
-                                <span className="-mr-1 mb-[2px] text-2xl">Co</span>
-                            </div>
-                            CoShop
-                        </div>
-                        <div className="flex-1 flex justify-between">
-                            <div>Seach</div>
-                            <div className="flex">
-                                <Link to="/shop">
-                                    <div className="hover:text-blue-400 text-black mx-[40px] font-bold text-lg">
-                                        Cửa hàng
-                                    </div>
-                                </Link>
-                                <Link to="/">
-                                    <div className="hover:text-blue-400 text-black mx-[40px] font-bold text-lg">
-                                        FAQS
-                                    </div>
-                                </Link>
-                                <Link to="/">
-                                    <div className="hover:text-blue-400 text-black mx-[40px] font-bold text-lg">
-                                        Blogs
-                                    </div>
-                                </Link>
-                                <Link to="/">
-                                    <div className="hover:text-blue-400 text-black mx-[40px] font-bold text-lg">
-                                        Pricing
-                                    </div>
-                                </Link>
-                                <Link to="/">
-                                    <div className="hover:text-blue-400 text-black ml-[40px] font-bold text-lg">
-                                        Đăng nhập / Đăng ký
-                                    </div>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+                    <HomeHeader />
                     <div className="flex-1 flex mt-[40px]">
                         <div className="w-[220px]">
                             <h2 className="font-bold text-[30px] mb-[30px]">Explore</h2>
