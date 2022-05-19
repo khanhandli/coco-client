@@ -8,16 +8,17 @@ import ItemProduct from '../components/ItemProduct';
 import Search from '../components/Search';
 import heart1 from '../../../assets/images/heart1.png';
 import heart from '../../../assets/images/heart.png';
-import { formatNumber } from '../../../utils/common';
+import { formatNumber, getNotification } from '../../../utils/common';
 import ShowMoreText from 'react-show-more-text';
-import { addFavoriteInUser, removeFavoriteInUser } from '../../../redux/userSlice';
+import { Link } from 'react-router-dom';
+import { addCart, addFavoriteInUser, removeFavoriteInUser } from '../../../redux/userSlice';
 const CosmeticShop = () => {
     const categories = useSelector((state) => state.categories);
     const product = useSelector((state) => state.product.products);
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
-    const { favorites } = user?.user;
+    const { favorites, cart } = user?.user;
     const [loading, setLoading] = React.useState(false);
     const [detailproduct, setDetailProduct] = React.useState({
         isShow: false,
@@ -45,12 +46,12 @@ const CosmeticShop = () => {
                         />
                     </div>
                 </div>
-                <div className="transition-all custom_scroll flex-1 px-[30px] pt-[10px] overflow-y-scroll pb-6">
+                <div className="transition-all custom_scroll flex-1 px-[10px] 2xl:px-[30px] pt-[10px] overflow-y-scroll pb-6">
                     <Search sort={sort} setSort={setSort} />
 
                     <div
                         className={`transition-all grid ${
-                            detailproduct.isShow ? 'grid-cols-3' : 'grid-cols-3 2xl:grid-cols-4'
+                            detailproduct.isShow ? 'grid-cols-2 2xl:grid-cols-3' : 'grid-cols-3 2xl:grid-cols-4'
                         } gap-6`}
                     >
                         {product &&
@@ -78,7 +79,7 @@ const CosmeticShop = () => {
                         )}
                     </div>
                 </div>
-                <div className={`relative transition-all ${detailproduct.isShow ? 'w-[340px]' : 'w-0'} `}>
+                <div className={`relative transition-all ${detailproduct.isShow ? 'lg:w-[340px]' : 'w-0'} `}>
                     <div className={`${detailproduct.isShow ? 'block h-full' : 'hidden'}`}>
                         <div className="px-[30px] pt-[20px] h-full">
                             <div className="h-full flex flex-col items-center justify-between">
@@ -103,12 +104,17 @@ const CosmeticShop = () => {
                                             </div>
                                         </div>
 
-                                        <h3 className="mt-1 text-[16px] text-[#ee4d2d]">
-                                            ₫
-                                            <span className="text-[20px]">
-                                                {formatNumber(detailproduct?.data?.price)}
-                                            </span>
-                                        </h3>
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="mt-1 text-[16px] text-[#ee4d2d]">
+                                                ₫
+                                                <span className="text-[20px]">
+                                                    {formatNumber(detailproduct?.data?.price)}
+                                                </span>
+                                            </h3>
+                                            <Link to={'/shop/detail/' + detailproduct?.data?._id}>
+                                                <span className="text-[16px] underline text-blue-500">Chi tiết</span>
+                                            </Link>
+                                        </div>
                                         <div className="text-[13px] text-[#cdcaca] font-medium">
                                             <ShowMoreText
                                                 lines={3}
@@ -124,7 +130,7 @@ const CosmeticShop = () => {
                                                     className="custom_desc"
                                                     dangerouslySetInnerHTML={{
                                                         __html:
-                                                            detailproduct.data.description &&
+                                                            detailproduct?.data?.description &&
                                                             detailproduct?.data?.description.replace(
                                                                 /margin-bottom/g,
                                                                 ''
@@ -175,6 +181,22 @@ const CosmeticShop = () => {
                                         </div>
                                     )}
                                     <button
+                                        onClick={async () => {
+                                            const check = cart.every((cartItem) => {
+                                                return cartItem._id !== detailproduct.data._id;
+                                            });
+                                            if (check) {
+                                                dispatch(addCart(detailproduct.data));
+
+                                                await patchDataAPI(
+                                                    'addcart',
+                                                    { cart: [...cart, { ...detailproduct.data, quantity_cart: 1 }] },
+                                                    user?.token
+                                                );
+                                            } else {
+                                                getNotification('Sản phẩm đã có trong giỏ hàng', 'warning');
+                                            }
+                                        }}
                                         type="button"
                                         className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-full text-sm px-5 py-2.5 text-center "
                                     >

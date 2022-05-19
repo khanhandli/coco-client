@@ -3,10 +3,10 @@ import SearchComponent from './SearchComponent';
 import { Badge, Col, Drawer, Row, Tooltip, List, Avatar, Button, Rate, Empty } from 'antd';
 import { MenuOutlined, SearchOutlined } from '@ant-design/icons';
 import location from '../../assets/images/pin.png';
-import cart from '../../assets/images/cart.png';
+import cartimg from '../../assets/images/cart.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logOut, removeFavoriteInUser } from '../../redux/userSlice';
+import { addCart, logOut, removeFavoriteInUser } from '../../redux/userSlice';
 import heart1 from '../../assets/images/heart1.png';
 import heart from '../../assets/images/heart.png';
 import { formatNumber, getNotification } from '../../utils/common';
@@ -18,7 +18,7 @@ const HeaderLayout = () => {
     const user = useSelector((state) => state.user);
     const productAll = useSelector((state) => state.product.fullProduct);
 
-    const { favorites } = user?.user;
+    const { favorites, cart } = user?.user;
     const navigate = useNavigate();
     const [visible, setVisible] = React.useState(false);
 
@@ -102,14 +102,28 @@ const HeaderLayout = () => {
                     </Tooltip>
                 </span>
                 <span className="px-4 text-[#ccc]">|</span>
-                <span className="mr-4">
+                <span
+                    className="mr-4"
+                    onClick={() => {
+                        navigate('/map');
+                    }}
+                >
                     <Tooltip placement="top" title="Vị trí cửa hàng">
                         <img className="cursor-pointer" src={location} alt="pin" />
                     </Tooltip>
                 </span>
-                <span>
+                <span
+                    onClick={() => {
+                        if (!user.token) {
+                            return getNotification('Vui lòng đăng nhập để thực hiện chức năng này', 'warning');
+                        }
+                        navigate('/cart');
+                    }}
+                >
                     <Tooltip placement="top" title="Giỏ hàng">
-                        <img className="cursor-pointer" src={cart} alt="cart" />
+                        <Badge count={cart && cart.length} overflowCount={10}>
+                            <img className="cursor-pointer" src={cartimg} alt="cart" />
+                        </Badge>
                     </Tooltip>
                 </span>
             </div>
@@ -165,7 +179,14 @@ const HeaderLayout = () => {
                                                     expanded={false}
                                                     truncatedEndingComponent={'... '}
                                                 >
-                                                    {item?.description}
+                                                    <div
+                                                        className="custom_desc"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html:
+                                                                item?.description &&
+                                                                item?.description.replace(/margin-bottom/g, ''),
+                                                        }}
+                                                    />
                                                 </ShowMoreText>
                                             </div>
                                             <div className="flex items-center justify-between mt-3">
@@ -177,11 +198,30 @@ const HeaderLayout = () => {
                                                 </div>
                                                 <div className="flex items-center">
                                                     <button
+                                                        onClick={async () => {
+                                                            const check = cart.every((cartItem) => {
+                                                                return cartItem._id !== item._id;
+                                                            });
+                                                            if (check) {
+                                                                dispatch(addCart(item));
+
+                                                                await patchDataAPI(
+                                                                    'addcart',
+                                                                    { cart: [...cart, { ...item, quantity_cart: 1 }] },
+                                                                    user?.token
+                                                                );
+                                                            } else {
+                                                                getNotification(
+                                                                    'Sản phẩm đã có trong giỏ hàng',
+                                                                    'warning'
+                                                                );
+                                                            }
+                                                        }}
                                                         type="button"
-                                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                                     >
                                                         <svg
-                                                            class="w-5 h-5 mr-2 -ml-1"
+                                                            className="w-5 h-5 mr-2 -ml-1"
                                                             fill="currentColor"
                                                             viewBox="0 0 20 20"
                                                             xmlns="http://www.w3.org/2000/svg"

@@ -26,6 +26,45 @@ const userSlice = createSlice({
             state.token = '';
             state.user = {};
         },
+        addCart: (state, action) => {
+            state.user = {
+                ...state.user,
+                cart: [...state?.user?.cart, { ...action.payload, quantity_cart: 1 }],
+            };
+        },
+        incrementQuantity: (state, action) => {
+            state.user.cart = state.user.cart.map((item) => {
+                if (item._id === action.payload) {
+                    item.quantity_cart++;
+                }
+                return item;
+            });
+        },
+        decrementQuantity: (state, action) => {
+            state.user.cart = state.user.cart.map((item) => {
+                if (item._id === action.payload) {
+                    item.quantity_cart--;
+                }
+                return item;
+            });
+        },
+        updateQuantity: (state, action) => {
+            state.user.cart = state.user.cart.map((item) => {
+                if (item._id === action.payload._id) {
+                    item.quantity_cart = action.payload.quantity_cart;
+                }
+                return item;
+            });
+        },
+        removeQuantity: (state, action) => {
+            state.user.cart = state.user.cart.filter((item) => item._id !== action.payload);
+        },
+        updateShipping: (state, action) => {
+            state.user.shipping = action.payload;
+        },
+        clearCart: (state, action) => {
+            state.user.cart = [];
+        },
     },
     extraReducers: {
         [getMe.fulfilled]: (state, action) => {
@@ -36,5 +75,16 @@ const userSlice = createSlice({
 });
 
 const { reducer: userReducer, actions } = userSlice;
-export const { logOut, addFavoriteInUser, removeFavoriteInUser } = actions;
+export const {
+    logOut,
+    addFavoriteInUser,
+    removeFavoriteInUser,
+    addCart,
+    incrementQuantity,
+    decrementQuantity,
+    updateQuantity,
+    removeQuantity,
+    updateShipping,
+    clearCart,
+} = actions;
 export default userReducer;

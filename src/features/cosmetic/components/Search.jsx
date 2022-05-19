@@ -134,7 +134,7 @@ const Search = ({ sort, setSort }) => {
                 </div>
             )}
 
-            <div className="flex items-center my-6">
+            <div className="flex items-center my-6 overflow-x-auto">
                 <span className="mr-6 text-lg font-medium text-[#888]">Lọc</span>
 
                 {ListSearch.map((item, index) => {
@@ -142,7 +142,7 @@ const Search = ({ sort, setSort }) => {
                         return (
                             <button
                                 type="button"
-                                className="text-gray-500 w-[140px] bg-gradient-to-r from-teal-200 mx-2 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 :focus:ring-teal-700 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+                                className="text-gray-500 min-w-[140px] bg-gradient-to-r from-teal-200 mx-2 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 :focus:ring-teal-700 font-medium rounded-full text-sm px-5 py-2.5 text-center"
                             >
                                 {item.title}
                             </button>
@@ -154,7 +154,7 @@ const Search = ({ sort, setSort }) => {
                                     dispatch(setProductBySort(item.path));
                                     setSort(item.path);
                                 }}
-                                className="relative inline-flex items-center justify-center p-0.5 mx-2 overflow-hidden text-sm font-medium text-gray-500 w-[140px] rounded-full group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 focus:ring-4 focus:outline-none focus:ring-lime-200"
+                                className="relative min-w-[140px] inline-flex items-center justify-center p-0.5 mx-2 overflow-hidden text-sm font-medium text-gray-500 w-[140px] rounded-full group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 focus:ring-4 focus:outline-none focus:ring-lime-200"
                             >
                                 <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white w-[140px]  rounded-full group-hover:bg-opacity-0">
                                     {item.title}

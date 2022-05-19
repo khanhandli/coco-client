@@ -1,16 +1,17 @@
 import { Rate, Tooltip } from 'antd';
 import React from 'react';
-import addcart from '../../../assets/images/addcart.png';
+import addcartimg from '../../../assets/images/addcart.png';
 import { formatNumber, getNotification } from '../../../utils/common';
 import heart1 from '../../../assets/images/heart1.png';
 import heart from '../../../assets/images/heart.png';
 import { useDispatch } from 'react-redux';
-import { addFavoriteInUser, removeFavoriteInUser } from '../../../redux/userSlice';
+import { addFavoriteInUser, removeFavoriteInUser, addCart } from '../../../redux/userSlice';
 import { patchDataAPI } from '../../../apis/fetchData';
+import { Link } from 'react-router-dom';
 
-const ItemProduct = ({ item, setDetailProduct, user }) => {
+const ItemProduct = ({ item, setDetailProduct, user, isDetail }) => {
     const dispatch = useDispatch();
-    const { favorites } = user?.user;
+    const { favorites, cart } = user?.user;
     return (
         <div className="relative border border-[#f3f3f3] transition-all max-w-sm bg-white rounded-lg shadow-lg">
             <div className="rounded-t-lg">
@@ -34,19 +35,47 @@ const ItemProduct = ({ item, setDetailProduct, user }) => {
                         <div className="text-md text-[#ccc]">Giá</div>
                         <span className="text-lg font-bold text-gray-900">${formatNumber(item.price)}</span>
                     </div>
-                    <button className="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 ">
-                        <span
-                            onClick={() => {
-                                if (!user.token) {
-                                    return getNotification('Vui lòng đăng nhập để thực hiện chức năng này', 'warning');
-                                }
-                            }}
-                            className="relative px-2 py-1 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0"
-                        >
-                            <Tooltip placement="top" title="Thêm vào giỏ hàng">
-                                <img className="h-[28px] w-[28px]" src={addcart} alt="addcart" />
-                            </Tooltip>
-                        </span>
+                    <button className="relative inline-flex items-center justify-center p-[1px] overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-2 focus:outline-none focus:ring-green-200 ">
+                        {isDetail ? (
+                            <Link to={'/shop/detail/' + item._id}>
+                                <button
+                                    type="button"
+                                    className="text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200  font-medium rounded-lg text-sm px-4 py-2 text-center"
+                                >
+                                    Mua ngay
+                                </button>
+                            </Link>
+                        ) : (
+                            <span
+                                onClick={async () => {
+                                    if (!user.token) {
+                                        return getNotification(
+                                            'Vui lòng đăng nhập để thực hiện chức năng này',
+                                            'warning'
+                                        );
+                                    }
+                                    const check = cart.every((cartItem) => {
+                                        return cartItem._id !== item._id;
+                                    });
+                                    if (check) {
+                                        dispatch(addCart(item));
+
+                                        await patchDataAPI(
+                                            'addcart',
+                                            { cart: [...cart, { ...item, quantity_cart: 1 }] },
+                                            user?.token
+                                        );
+                                    } else {
+                                        getNotification('Sản phẩm đã có trong giỏ hàng', 'warning');
+                                    }
+                                }}
+                                className="relative px-2 py-1 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0"
+                            >
+                                <Tooltip placement="top" title="Thêm vào giỏ hàng">
+                                    <img className="h-[28px] w-[28px]" src={addcartimg} alt="addcart" />
+                                </Tooltip>
+                            </span>
+                        )}
                     </button>
                 </div>
             </div>

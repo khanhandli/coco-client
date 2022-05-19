@@ -13,19 +13,31 @@ import banner2 from '../../../assets/images/banner-giua-trang_2.png';
 import banner3 from '../../../assets/images/banner3.png';
 import SlideBlogPreview from '../components/SlideBlogPreview';
 import { useSelector } from 'react-redux';
+import { getDataAPI } from '../../../apis/fetchData';
 
 const listColor = ['bg-[#9666f6]', 'bg-[#ffa90e]', 'bg-[#1ce6ca]'];
 
 const ShopPage = () => {
-    const product = useSelector((state) => state.product.products);
+    const [listBlog, setListBlog] = React.useState([]);
 
+    const product = useSelector((state) => state.product.products);
+    React.useEffect(() => {
+        (async () => {
+            const res = await getDataAPI('post');
+            if (res.status === 200) {
+                setListBlog(res.data);
+            }
+        })();
+    }, []);
     return (
         <AppLayout>
             <div className=" w-full">
                 <div className="flex justify-between w-full items-center">
                     <div className="flex flex-col">
-                        <span className="text-5xl font-bold text_gradient">COCOSHOP</span>
-                        <span className="text-2xl font-medium mt-3 text-[#515270] ml-2">Cosmetics Paradise</span>
+                        <span className="text-xl lg:text-5xl font-bold text_gradient">COCOSHOP</span>
+                        <span className="text-md lg:text-2xl font-medium mt-3 text-[#515270] ml-2">
+                            Cosmetics Paradise
+                        </span>
                     </div>
                     <div className="flex">
                         <img src={cosmetics} alt="cosmetics" />
@@ -42,7 +54,7 @@ const ShopPage = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-16 mt-[60px] w-[80%] mb-[90px]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mt-[60px] w-full 2xl:w-[80%] mb-[90px]">
                     {product &&
                         product.length > 0 &&
                         product
@@ -67,8 +79,8 @@ const ShopPage = () => {
                 </div>
                 <PromotionComponent products={product} />
                 <div>
-                    <h2 className="text-center mt-[40px] text-2xl">MẸO LÀM ĐẸP / ĐÁNH GIÁ</h2>
-                    <SlideBlogPreview />
+                    <h2 className="text-center mt-0 lg:mt-[40px] text-2xl">MẸO LÀM ĐẸP / ĐÁNH GIÁ</h2>
+                    <SlideBlogPreview listBlog={listBlog} />
                 </div>
             </div>
         </AppLayout>

@@ -1,7 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+import { logOut } from '../../redux/userSlice';
+
+const styleActive = 'hover:text-blue-400 text-black mx-[40px] font-bold text-[18px] font-mono underline';
+const styleNotActive = 'hover:text-blue-400 text-black mx-[40px] font-bold text-[18px] font-mono';
 
 const HomeHeader = () => {
+    const { pathname } = useLocation();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
+
     return (
         <div className="flex justify-between">
             <div className="w-[220px] relative pl-11 font-bold text-xl">
@@ -21,26 +30,36 @@ const HomeHeader = () => {
                             Cửa hàng
                         </div>
                     </Link>
-                    <Link to="/">
+                    {/* <Link to="/">
                         <div className="hover:text-blue-400 text-black mx-[40px] font-bold text-[18px] font-mono">
                             FAQS
                         </div>
+                    </Link> */}
+                    <Link to="/blog">
+                        <div className={pathname.includes('blog') ? styleActive : styleNotActive}>Blogs</div>
                     </Link>
-                    <Link to="/">
-                        <div className="hover:text-blue-400 text-black mx-[40px] font-bold text-[18px] font-mono">
-                            Blogs
-                        </div>
-                    </Link>
-                    <Link to="/">
+                    {/* <Link to="/">
                         <div className="hover:text-blue-400 text-black mx-[40px] font-bold text-[18px] font-mono">
                             Pricing
                         </div>
-                    </Link>
-                    <Link to="/login">
-                        <div className="hover:text-blue-400 text-black ml-[40px] font-bold text-[18px] font-mono">
-                            Đăng nhập / Đăng ký
+                    </Link> */}
+                    {user?.token ? (
+                        <div
+                            onClick={() => {
+                                dispatch(logOut());
+                                localStorage.removeItem('firstLogin');
+                            }}
+                            className="hover:text-blue-400 text-black ml-[40px] font-bold text-[18px] font-mono"
+                        >
+                            Thoát
                         </div>
-                    </Link>
+                    ) : (
+                        <Link to="/login">
+                            <div className="hover:text-blue-400 text-black ml-[40px] font-bold text-[18px] font-mono">
+                                Đăng nhập / Đăng ký
+                            </div>
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>

@@ -35,7 +35,7 @@ const HotSaleComponent = ({ bg, item }) => {
                             Mua ngay
                         </div>
                     </div>
-                    <div className="mt-4 mb-1 text-lg text-[#f1e9f4] font-mono">{item.title}</div>
+                    <div className="mt-4 mb-1 text-lg text-[#f1e9f4] font-mono overflow_word">{item.title}</div>
                     <div>
                         <Rate disabled defaultValue={2} style={{ fontSize: '14px' }} />
                     </div>
