@@ -17,7 +17,7 @@ const Blogs = () => {
     }, []);
 
     return (
-        <div className="px-[60px] py-[30px] flex flex-col h-screen">
+        <div className="px-[60px] py-[30px] flex flex-col">
             <HomeHeader />
             <div className="flex-1 flex mt-[40px]">
                 <Row gutter={[40, 40]} className="w-full">
@@ -29,8 +29,8 @@ const Blogs = () => {
                                         <img className="object-cover h-[300px] w-full" src={item?.image} alt="213" />
                                         <h2 className="uppercase text-lg truncate mt-3 font-bold">{item.title}</h2>
                                         <h3
-                                            className="text-md truncate truncate"
-                                            dangerouslySetInnerHTML={{ __html: item?.content?.slice(0, 1000) }}
+                                            className="text-md truncate"
+                                            dangerouslySetInnerHTML={{ __html: item?.content?.slice(0, 500) }}
                                         />
                                     </div>
                                     <div className="flex justify-end">

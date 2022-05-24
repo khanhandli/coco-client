@@ -88,19 +88,45 @@ const CosmeticShop = () => {
                                     <h2 className="font-mono  font-bold">{detailproduct?.data?.title}</h2>
                                     <div className="flex flex-col">
                                         <div className="flex items-center">
-                                            <Rate allowHalf defaultValue={2.5} style={{ fontSize: '14px' }} />
-                                            <span className="ml-2 text-[15px]">(12)</span>
+                                            <Rate
+                                                disabled
+                                                allowHalf
+                                                value={Number(
+                                                    (
+                                                        detailproduct?.data?.rating / detailproduct?.data?.numReviewers
+                                                    ).toFixed(1)
+                                                )}
+                                                style={{ fontSize: '16px' }}
+                                            />
+                                            {detailproduct?.data?.rating ? (
+                                                <div className="ml-2 pt-1 font-mono text-[15px]">
+                                                    (
+                                                    {Number(
+                                                        (
+                                                            detailproduct?.data?.rating /
+                                                            detailproduct?.data?.numReviewers
+                                                        ).toFixed(1)
+                                                    )}
+                                                    )
+                                                </div>
+                                            ) : (
+                                                <></>
+                                            )}
                                         </div>
 
                                         <div className="flex mt-2 items-center">
                                             <div className="h-full text-[15px]">
                                                 <span>Đã bán: </span>
-                                                <span className="font-bold underline">123</span>
+                                                <span className="font-bold underline ml-1">
+                                                    {detailproduct?.data?.sold}
+                                                </span>
                                             </div>
                                             <div className="mx-3 mb-1">|</div>
                                             <div className="h-full text-[15px]">
                                                 <span>Đánh giá: </span>
-                                                <span className="font-bold underline">123</span>
+                                                <span className="font-bold underline ml-1">
+                                                    {detailproduct?.data?.numReviewers || 0}
+                                                </span>
                                             </div>
                                         </div>
 

@@ -55,7 +55,7 @@ const RouterList = () => {
             </Route>
 
             <Route path="/setting">
-                <Route index element={<Setting />} />
+                <Route index element={!user.isLogged ? <NotFound /> : <Setting />} />
             </Route>
         </Routes>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import SearchComponent from './SearchComponent';
 import { Badge, Col, Drawer, Row, Tooltip, List, Avatar, Button, Rate, Empty } from 'antd';
-import { MenuOutlined, SearchOutlined } from '@ant-design/icons';
+import { MenuOutlined, BellOutlined } from '@ant-design/icons';
 import location from '../../assets/images/pin.png';
 import cartimg from '../../assets/images/cart.png';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,16 +11,21 @@ import heart1 from '../../assets/images/heart1.png';
 import heart from '../../assets/images/heart.png';
 import { formatNumber, getNotification } from '../../utils/common';
 import ShowMoreText from 'react-show-more-text';
-import { patchDataAPI } from '../../apis/fetchData';
+import { getDataAPI, patchDataAPI } from '../../apis/fetchData';
+import Notification from './Notification';
 
 const HeaderLayout = () => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
     const productAll = useSelector((state) => state.product.fullProduct);
+    const [visibleNoti, setVisibleNoti] = React.useState(false);
+
+    const [listNoti, setListNoti] = React.useState([]);
 
     const { favorites, cart } = user?.user;
     const navigate = useNavigate();
     const [visible, setVisible] = React.useState(false);
+    const [page, setPage] = React.useState(1);
 
     const showDrawer = () => {
         setVisible(true);
@@ -28,6 +33,15 @@ const HeaderLayout = () => {
     const onClose = () => {
         setVisible(false);
     };
+
+    React.useEffect(() => {
+        (async () => {
+            const res = await getDataAPI('notification?limit=' + page * 4);
+            if (res.status === 200) {
+                setListNoti(res.data);
+            }
+        })();
+    }, [page]);
 
     return (
         <Row className="flex justify-between items-center mb-[20px]">
@@ -129,10 +143,18 @@ const HeaderLayout = () => {
             </div>
 
             <div className="flex">
-                <span className="shadow-xl bg-[#c8cdd9] inline-block h-min px-[14px] py-2 text-white rounded-tl-[50%] rounded-tr-xl rounded-bl-xl rounded-br-3xl">
-                    <div className="flex items-center py-1">
-                        <MenuOutlined style={{ color: 'black' }} />
-                    </div>
+                <span
+                    onClick={() => setVisibleNoti(!visibleNoti)}
+                    className="shadow-xl cursor-pointer bg-[#c8cdd9] inline-block h-min px-[14px] py-2 text-white rounded-tl-[50%] rounded-tr-xl rounded-bl-xl rounded-br-3xl"
+                >
+                    <Badge
+                        count={listNoti?.data && listNoti?.data.length > 0 ? listNoti?.data?.length : 0}
+                        overflowCount={10}
+                    >
+                        <div className="flex items-center py-1">
+                            <BellOutlined style={{ color: '#222', fontSize: '20px' }} />
+                        </div>
+                    </Badge>
                 </span>
             </div>
             <Drawer
@@ -191,7 +213,14 @@ const HeaderLayout = () => {
                                             </div>
                                             <div className="flex items-center justify-between mt-3">
                                                 <div className="flex flex-col">
-                                                    <Rate allowHalf defaultValue={2.5} style={{ fontSize: '20px' }} />
+                                                    <Rate
+                                                        disabled
+                                                        allowHalf
+                                                        defaultValue={Number(
+                                                            (item?.rating / item?.numReviewers).toFixed(1)
+                                                        )}
+                                                        style={{ fontSize: '20px' }}
+                                                    />
                                                     <div className="text-lg mt-3">
                                                         $<span className="font-bold">{formatNumber(item.price)}</span>
                                                     </div>
@@ -275,6 +304,34 @@ const HeaderLayout = () => {
                         ></Empty>
                     </div>
                 )}
+            </Drawer>
+            <Drawer
+                title="Thông báo"
+                drawerStyle={{ background: '#f1f1f1' }}
+                onClose={() => setVisibleNoti(!visibleNoti)}
+                placement="right"
+                visible={visibleNoti}
+                className="list_noti"
+            >
+                <div>
+                    {listNoti?.data &&
+                        listNoti?.data?.length > 0 &&
+                        listNoti?.data.map((item, index) => {
+                            return <Notification key={index} item={item} />;
+                        })}
+                    {listNoti?.total >= 4 && page * 4 < listNoti?.total && (
+                        <div className="flex justify-center mt-4">
+                            <button
+                                onClick={() => setPage(page + 1)}
+                                class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-full group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300"
+                            >
+                                <span class="relative px-5 py-2 transition-all ease-in duration-75 bg-white rounded-full group-hover:bg-opacity-0">
+                                    Xem thêm
+                                </span>
+                            </button>
+                        </div>
+                    )}
+                </div>
             </Drawer>
         </Row>
     );

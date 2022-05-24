@@ -1,6 +1,6 @@
 import React from 'react';
 import AppLayout from '../../../components/layouts/AppLayout';
-import { Table, Badge, Menu, Dropdown, Space } from 'antd';
+import { Table, Badge, Menu, Dropdown, Space, Tooltip } from 'antd';
 import { ReconciliationOutlined } from '@ant-design/icons';
 import { getDataAPI } from '../../../apis/fetchData';
 import { useSelector } from 'react-redux';
@@ -11,9 +11,12 @@ const HistoryOrder = () => {
     const [table2, setTable2] = React.useState([]);
     const user = useSelector((state) => state.user);
 
+    const [loading, setLoading] = React.useState(false);
+
     React.useEffect(() => {
         if (!user?.token) return;
         const getData = async () => {
+            setLoading(true);
             const res = await getDataAPI('history', user?.token);
             if (res.status === 200) {
                 setTable2(res.data);
@@ -22,6 +25,7 @@ const HistoryOrder = () => {
             if (res2.status === 200) {
                 setTable1(res2.data);
             }
+            setLoading(false);
         };
         getData();
     }, [user?.token]);
@@ -46,7 +50,11 @@ const HistoryOrder = () => {
                 title: 'Giá tiền',
                 dataIndex: 'price',
                 key: 'price',
-                render: (value) => <span className="font-bold text-yellow-600">{formatNumber(value)}</span>,
+                render: (value, row) => (
+                    <span className="font-bold text-yellow-600">
+                        {formatNumber(value)} <span className="text-[12px] text-red-500">(x{row?.quantity_cart})</span>
+                    </span>
+                ),
             },
         ];
 
@@ -84,6 +92,9 @@ const HistoryOrder = () => {
                 if (value == 'money') {
                     return <span>Tiền mặt</span>;
                 }
+                if (value == 'paypal') {
+                    return <span>Đã thanh toán</span>;
+                }
             },
         },
         {
@@ -98,7 +109,9 @@ const HistoryOrder = () => {
             key: '_',
             render: (value) => (
                 <div className="cursor-pointer hover:text-black">
-                    <ReconciliationOutlined style={{ fontSize: '20px', color: 'inherit' }} />
+                    <Tooltip placement="top" title="Xem hóa đơn">
+                        <ReconciliationOutlined style={{ fontSize: '20px', color: 'inherit' }} />
+                    </Tooltip>
                 </div>
             ),
         },
@@ -112,6 +125,7 @@ const HistoryOrder = () => {
                 expandable={{ expandedRowRender }}
                 dataSource={table1}
                 pagination={{ pageSize: 10 }}
+                loading={loading}
             />
         </AppLayout>
     );

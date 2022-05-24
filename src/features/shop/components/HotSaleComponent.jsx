@@ -37,7 +37,12 @@ const HotSaleComponent = ({ bg, item }) => {
                     </div>
                     <div className="mt-4 mb-1 text-lg text-[#f1e9f4] font-mono overflow_word">{item.title}</div>
                     <div>
-                        <Rate disabled defaultValue={2} style={{ fontSize: '14px' }} />
+                        <Rate
+                            disabled
+                            allowHalf
+                            value={Number((item?.rating / item?.numReviewers).toFixed(1))}
+                            style={{ fontSize: '16px' }}
+                        />
                     </div>
                     <div className="mt-4 flex justify-between items-center w-full text-white">
                         <span className="text-lg font-bold">

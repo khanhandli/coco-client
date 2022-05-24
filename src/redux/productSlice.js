@@ -1,12 +1,16 @@
 import { getDataAPI } from '../apis/fetchData';
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
+import moment from 'moment';
 export const getProduct = createAsyncThunk('product/getList', async (params, thunkAPI) => {
     // thunkAPI.dispatch(...)
     const currentProduct = await getDataAPI('product');
     return currentProduct.data;
 });
+
+const handleDate = (time) => {
+    return moment(time);
+};
 
 const productSlice = createSlice({
     name: 'product',
@@ -17,7 +21,9 @@ const productSlice = createSlice({
     reducers: {
         setProductByCategory: (state, action) => {
             const products = state.fullProduct.filter((item) =>
-                action.payload === 'all' ? true : item.category._id === action.payload
+                action.payload === 'all'
+                    ? true
+                    : item?.category?._id === action.payload || item?.category?.parent === action.payload
             );
 
             state.products = products;
@@ -25,11 +31,11 @@ const productSlice = createSlice({
         setProductBySort: (state, action) => {
             const products = state.products.sort((a, b) => {
                 if (action.payload === 'sold') {
-                    return a?.sold - b?.sold;
-                } else if (action.payload === 'new') {
-                    return a?.createdAt - b?.createdAt;
+                    return b?.sold - a?.sold;
                 } else if (action.payload === 'old') {
-                    return b?.createdAt - a?.createdAt;
+                    return handleDate(a?.createdAt) - handleDate(b?.createdAt);
+                } else if (action.payload === 'new') {
+                    return handleDate(b?.createdAt) - handleDate(a?.createdAt);
                 } else if (action.payload === 'price') {
                     return b.price - a.price;
                 } else if (action.payload === '-price') {
@@ -49,8 +55,8 @@ const productSlice = createSlice({
     },
     extraReducers: {
         [getProduct.fulfilled]: (state, action) => {
-            state.products = action.payload;
-            state.fullProduct = action.payload;
+            state.products = action.payload.sort((a, b) => moment(b.createdAt) - moment(a.createdAt));
+            state.fullProduct = action.payload.sort((a, b) => moment(b.createdAt) - moment(a.createdAt));
         },
     },
 });

@@ -53,7 +53,7 @@ const SlideBlogPreview = ({ listBlog }) => {
                                         <h2 className="uppercase text-lg truncate mt-3 font-bold">{item.title}</h2>
                                         <h3
                                             className="text-md truncate"
-                                            dangerouslySetInnerHTML={{ __html: item.content.slice(0, 900) }}
+                                            dangerouslySetInnerHTML={{ __html: item.content.slice(0, 200) }}
                                         />
                                     </div>
                                     <Link to={`/home/tips/${item._id}`}>

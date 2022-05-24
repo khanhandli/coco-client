@@ -66,42 +66,40 @@ const CartProduct = () => {
         }
     }, [cart]);
 
-    const tranSuccess = React.useCallback(async (payment) => {
-        console.log('🚀 ~ file: index.jsx ~ line 33 ~ tranSuccess ~ payment', payment);
-        // setLoadingBackDrop(true);
-        const { paymentID, address } = payment;
-        const priceCheckout = total;
+    const tranSuccess = React.useCallback(
+        async (payment) => {
+            const { paymentID, address } = payment;
+            console.log('🚀 ~ file: index.jsx ~ line 71 ~ tranSuccess ~ payment', payment);
 
-        // try {
-        //     await axios.post(
-        //         './api/payment',
-        //         { cart, paymentID, address, priceCheckout },
-        //         {
-        //             headers: { Authorization: token },
-        //         }
-        //     );
+            setCurrent({ ...current, current: 2 });
 
-        //     setCart([]);
-        //     addToCart([]);
-        //     setLoadingBackDrop(false);
-        //     enqueueSnackbar('Thanh toán thành công', {
-        //         variant: 'success',
-        //         anchorOrigin: {
-        //             vertical: 'top',
-        //             horizontal: 'right',
-        //         },
-        //     });
-        // } catch (err) {
-        //     enqueueSnackbar(err.response.data.msg, {
-        //         variant: 'error',
-        //         anchorOrigin: {
-        //             vertical: 'top',
-        //             horizontal: 'right',
-        //         },
-        //     });
-        //     setLoadingBackDrop(false);
-        // }
-    }, []);
+            const res = await postDataAPI(
+                'payment',
+                {
+                    cart,
+                    name: dataShipping.name,
+                    address: dataShipping.address,
+                    phone: dataShipping.phone,
+                    priceCheckout: total - sell,
+                    status: '2',
+                    type: 'paypal',
+                },
+                user.token
+            );
+            if (res.status === 200) {
+                setFinish(true);
+                dispatch(clearCart());
+                getNotification(res.data.msg, 'success');
+
+                // delete cart
+                const res2 = await patchDataAPI('addcart', { cart: [] }, user?.token);
+                if (res2.status === 200) {
+                    navigate('/shop');
+                }
+            }
+        },
+        [user.token]
+    );
 
     const [isModalVisible, setIsModalVisible] = React.useState(false);
     const [dataShipping, setDataShipping] = React.useState({

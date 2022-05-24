@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getCategory } from './redux/categorySlice';
 import { getProduct } from './redux/productSlice';
-import { getMe } from './redux/userSlice';
+import { addSocket, getMe } from './redux/userSlice';
 import RouterList from './routes';
-
+import io from 'socket.io-client';
 function App() {
     const dispatch = useDispatch();
+    const socket = io(`http://localhost:5000`, { transports: ['websocket'] });
 
     React.useEffect(() => {
         (async () => {
@@ -16,7 +17,13 @@ function App() {
                 await dispatch(getMe());
             }
         })();
-    }, []);
+    }, [dispatch]);
+
+    React.useEffect(() => {
+        if (socket) {
+            dispatch(addSocket(socket));
+        }
+    }, [socket]);
 
     return (
         <div className="h-full">

@@ -13,6 +13,7 @@ const userSlice = createSlice({
         isLogged: localStorage.getItem('firstLogin') ? true : false,
         token: '',
         user: {},
+        socket: null,
     },
     reducers: {
         addFavoriteInUser: (state, action) => {
@@ -65,6 +66,18 @@ const userSlice = createSlice({
         clearCart: (state, action) => {
             state.user.cart = [];
         },
+        addSocket: (state, action) => {
+            state.socket = action.payload;
+        },
+        updateAvatar: (state, action) => {
+            state.user.avatar = action.payload;
+        },
+        updateProfileSettings: (state, action) => {
+            state.user = {
+                ...state.user,
+                ...action.payload,
+            };
+        },
     },
     extraReducers: {
         [getMe.fulfilled]: (state, action) => {
@@ -86,5 +99,8 @@ export const {
     removeQuantity,
     updateShipping,
     clearCart,
+    addSocket,
+    updateAvatar,
+    updateProfileSettings,
 } = actions;
 export default userReducer;

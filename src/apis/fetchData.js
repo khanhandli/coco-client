@@ -1,5 +1,5 @@
 import axios from 'axios';
-const URL = 'https://cocoapp-server.herokuapp.com';
+const URL = 'http://localhost:5000';
 axios.defaults.withCredentials = true;
 
 export const getDataAPI = async (url, token) => {

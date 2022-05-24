@@ -28,7 +28,18 @@ const ItemProduct = ({ item, setDetailProduct, user, isDetail }) => {
                 </Tooltip>
 
                 <div className="flex items-center mt-2.5 mb-3">
-                    <Rate allowHalf defaultValue={2.5} style={{ fontSize: '14px' }} />
+                    <Rate
+                        disabled
+                        value={Number((item?.rating / item?.numReviewers).toFixed(1))}
+                        style={{ fontSize: '16px' }}
+                    />
+                    {item?.rating ? (
+                        <div className="font-mono pt-1 ml-2">
+                            ({Number((item?.rating / item?.numReviewers).toFixed(1))})
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                 </div>
                 <div className="flex justify-between items-center">
                     <div>
