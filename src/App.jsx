@@ -7,7 +7,7 @@ import RouterList from './routes';
 import io from 'socket.io-client';
 function App() {
     const dispatch = useDispatch();
-    const socket = io(`http://localhost:5000`, { transports: ['websocket'] });
+    const socket = io(`https://cocoapp-server.herokuapp.com`, { transports: ['websocket'] });
 
     React.useEffect(() => {
         (async () => {
