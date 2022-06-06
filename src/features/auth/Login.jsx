@@ -10,15 +10,19 @@ const Login = () => {
     const [loading, setLoading] = React.useState(false);
 
     const onSubmit = async (data) => {
-        setLoading(true);
-        const res = await postDataAPI('login', data);
-        if (res.status === 200) {
-            localStorage.setItem('firstLogin', true);
+        try {
+            setLoading(true);
+            const res = await postDataAPI('login', data);
+            if (res.status === 200) {
+                localStorage.setItem('firstLogin', true);
 
-            getNotification(res.data.msg, 'success');
-            setLoading(false);
+                getNotification(res.data.msg, 'success');
+                setLoading(false);
 
-            window.location.href = '/home';
+                window.location.href = '/home';
+            }
+        } catch (error) {
+            getNotification(error.response.data.msg, 'error');
         }
     };
     return (
@@ -102,7 +106,7 @@ const Login = () => {
                                 </Row>
                             </Form.Item>
                         </Form>
-                        <h4 className="text-sm text-center mt-4">Hoặc đăng nhập bằng</h4>
+                        {/* <h4 className="text-sm text-center mt-4">Hoặc đăng nhập bằng</h4> */}
                         {/* <SocicalLogin popupCenter={popupCenter} setLoading={setLoading} /> */}
                     </div>
                 </Spin>

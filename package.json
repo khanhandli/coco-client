@@ -22,6 +22,7 @@
     "react-search-autocomplete": "^6.1.2",
     "react-show-more-text": "^1.5.2",
     "react-slick": "^0.29.0",
+    "react-to-print": "^2.14.7",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5"

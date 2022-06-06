@@ -23,7 +23,7 @@ const HomeHeader = () => {
             </div>
 
             <div className="flex-1 flex justify-between">
-                <div>Seach</div>
+                <div></div>
                 <div className="flex">
                     <Link to="/home">
                         <div className="hover:text-blue-400 text-black mx-[40px] font-bold text-[18px] font-mono">

@@ -111,7 +111,7 @@ const Register = () => {
                                 </Row>
                             </Form.Item>
                         </Form>
-                        <h4 className="text-sm text-center mt-4">Hoặc đăng nhập bằng</h4>
+                        {/* <h4 className="text-sm text-center mt-4">Hoặc đăng nhập bằng</h4> */}
                         {/* <SocicalLogin popupCenter={popupCenter} setLoading={setLoading} /> */}
                     </div>
                 </Spin>

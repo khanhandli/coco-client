@@ -142,7 +142,7 @@ const Setting = () => {
                                 <div className="flex justify-end">
                                     <button
                                         type="button"
-                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2 focus:outline-none "
+                                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2 focus:outline-none "
                                     >
                                         Cập nhật
                                     </button>
@@ -276,7 +276,7 @@ const Setting = () => {
                                     );
                                 }}
                                 type="button"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2 focus:outline-none "
+                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2 focus:outline-none "
                             >
                                 Cập nhật
                             </button>
