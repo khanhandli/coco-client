@@ -66,20 +66,24 @@ const CartProduct = () => {
         }
     }, [cart]);
 
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const [dataShipping, setDataShipping] = React.useState({
+        name: '',
+        phone: '',
+        address: '',
+    });
+
     const tranSuccess = React.useCallback(
         async (payment) => {
-            const { paymentID, address } = payment;
-            console.log('🚀 ~ file: index.jsx ~ line 71 ~ tranSuccess ~ payment', payment);
-
             setCurrent({ ...current, current: 2 });
 
             const res = await postDataAPI(
                 'payment',
                 {
                     cart,
-                    name: dataShipping.name,
-                    address: dataShipping.address,
-                    phone: dataShipping.phone,
+                    name: dataShipping?.name,
+                    address: dataShipping?.address,
+                    phone: dataShipping?.phone,
                     priceCheckout: total - sell,
                     status: '2',
                     type: 'paypal',
@@ -98,15 +102,8 @@ const CartProduct = () => {
                 }
             }
         },
-        [user.token]
+        [user.token, dataShipping]
     );
-
-    const [isModalVisible, setIsModalVisible] = React.useState(false);
-    const [dataShipping, setDataShipping] = React.useState({
-        name: '',
-        phone: '',
-        address: '',
-    });
 
     React.useEffect(() => {
         if (shipping?.address) {
